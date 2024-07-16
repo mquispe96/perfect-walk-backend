@@ -1,10 +1,14 @@
 const cors = require("cors");
 const express = require("express");
+const weatherController = require("./controllers/weather.controller.js");
+// const locationsController = require("./controllers/locations.controller.js");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use('/weather', weatherController);
+// app.use('/locations', locationsController);
 
 app.get("/", (req, res) => res.send("Welcome to Perfect Walk App"));
 
