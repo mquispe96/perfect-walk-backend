@@ -12,7 +12,7 @@ CREATE TABLE users (
   first_name TEXT NOT NULL,
   middle_name TEXT,
   last_name TEXT NOT NULL,
-  birthdate DATE NOT NULL,
+  birth_date DATE NOT NULL,
   location_city TEXT,
   location_state TEXT,
   location_zip INTEGER,
