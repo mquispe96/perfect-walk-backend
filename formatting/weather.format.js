@@ -1,5 +1,4 @@
 const moment = require('moment');
-const weather = require('../controllers/weather.controller');
 
 const formatAllWeatherData = data => {
   const current = {
