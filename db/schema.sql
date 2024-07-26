@@ -23,7 +23,7 @@ CREATE TABLE users (
 
 CREATE TABLE posts (
   id SERIAL PRIMARY KEY,
-  user_id INTEGER REFERENCES users(id),
+  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
   post_text TEXT,
   post_likes INTEGER DEFAULT 0,
   post_location TEXT,
@@ -33,7 +33,7 @@ CREATE TABLE posts (
 -- Research multer for file upload (Chatgpt example)
 CREATE TABLE post_media (
   id SERIAL PRIMARY KEY,
-  post_id INTEGER REFERENCES posts(id),
+  post_id INTEGER REFERENCES posts(id) ON DELETE CASCADE,
   media BYTEA,
   media_type VARCHAR(50), 
   created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -41,8 +41,8 @@ CREATE TABLE post_media (
 
 CREATE TABLE comments (
   id SERIAL PRIMARY KEY,
-  user_id INTEGER REFERENCES users(id),
-  post_id INTEGER REFERENCES posts(id),
+  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+  post_id INTEGER REFERENCES posts(id) ON DELETE CASCADE,
   comment_text TEXT NOT NULL,
   comment_likes INTEGER DEFAULT 0,
   created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -50,8 +50,8 @@ CREATE TABLE comments (
 
 CREATE TABLE sub_comments (
   id SERIAL PRIMARY KEY,
-  user_id INTEGER REFERENCES users(id),
-  comment_id INTEGER REFERENCES comments(id),
+  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+  comment_id INTEGER REFERENCES comments(id) ON DELETE CASCADE,
   sub_comment_text TEXT NOT NULL,
   sub_comment_likes INTEGER DEFAULT 0,
   created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
