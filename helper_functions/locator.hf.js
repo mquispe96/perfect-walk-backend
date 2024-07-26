@@ -26,9 +26,9 @@ async function getNameFromIPLocation(latitude, longitude) {
   return { city: town || city, stateCode: state_code };
 }
 
-async function getLocationFromZipCode(zipCode) {
+async function getLocationFromUserInput(input) {
   const response = await axios.get(
-    `${OPEN_CAGE_API_BASE_URL}/json?q=${zipCode},usa&key=${OPEN_CAGE_API_KEY}`
+    `${OPEN_CAGE_API_BASE_URL}/json?q=${input},usa&key=${OPEN_CAGE_API_KEY}`
   );
   const { lat, lng } = response.data.results[0].geometry;
   const { town, state_code, city } = response.data.results[0].components;
@@ -42,5 +42,5 @@ async function getLocationFromZipCode(zipCode) {
 module.exports = {
   getLocationFromIP,
   getNameFromIPLocation,
-  getLocationFromZipCode,
+  getLocationFromUserInput,
 };
