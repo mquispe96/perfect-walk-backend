@@ -16,7 +16,7 @@ const {
   hasRequiredFields,
   confirmUserBeforeDeletion,
 } = require("../validations/users.validations.js");
-const {formatRegistrationData} = require("../formatting/users.format.js");
+const { formatRegistrationData } = require("../formatting/users.format.js");
 
 users.get("/", async (req, res) =>
   res.status(403).json({ error: "Access denied" })
@@ -24,22 +24,20 @@ users.get("/", async (req, res) =>
 
 users.get("/get-security-question/:email", async (req, res) => {
   const { email } = req.params;
-  const user = await getSecurityQuestion(email);
-  if (user.security_question) {
-    res.json({ securityQuestion: user.security_question });
+  const question = await getSecurityQuestion(email);
+  if (question) {
+    res.json({ question });
   } else {
-    res
-      .status(404)
-      .json({
-        error: "No Security Question found with provided email, try agin",
-      });
+    res.status(404).json({
+      error: "No Security Question found with provided email, try agin",
+    });
   }
 });
 
 users.post("/check-security-answer", async (req, res) => {
   const { email, answer } = req.body;
   const confirmed = await checkSecurityAnswer(email, answer);
-  if (confirmed === true) {
+  if (confirmed) {
     res.json({ confirmed });
   } else {
     res.status(400).json({ error: "Incorrect answer" });
@@ -57,7 +55,7 @@ users.put("/reset-password", async (req, res) => {
 });
 
 users.post(
-  "register",
+  "/register",
   validateEmail,
   itsNewUser,
   hasRequiredFields,
@@ -72,13 +70,13 @@ users.post(
   }
 );
 
-users.post("login", async (req, res) => {
+users.post("/login", async (req, res) => {
   const { username, password } = req.body;
   const user = await userLogin(username, password);
   if (user.id) {
     res.json(humps.camelizeKeys(user));
   } else {
-    res.status(400).json({ error: "Login failed" });
+    res.status(400).json(user.error);
   }
 });
 
@@ -88,7 +86,7 @@ users.put("/change-password", async (req, res) => {
   if (user.id) {
     res.json({ message: "Password changed successfully" });
   } else {
-    res.status(400).json({ error: "Password change failed" });
+    res.status(400).json(user.error);
   }
 });
 

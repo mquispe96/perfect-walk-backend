@@ -1,4 +1,5 @@
 const db = require("../db/dbConfig.js");
+const bcrypt = require("bcrypt");
 
 const itsNewUser = async (req, res, next) => {
   const { email, username } = req.body;
@@ -50,14 +51,18 @@ const hasRequiredFields = async (req, res, next) => {
 
 const confirmUserBeforeDeletion = async (req, res, next) => {
   const { email, password } = req.body;
-  const user = await db.oneOrNone(
-    "SELECT * FROM users WHERE email = $1 AND password = $2",
-    [email, password]
-  );
+  const user = await db.oneOrNone("SELECT * FROM users WHERE email = $1", [
+    email,
+  ]);
   if (user) {
-    next();
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (isMatch) {
+      next();
+    } else {
+      res.status(400).json({ error: "Invalid password" });
+    }
   } else {
-    res.status(400).json({ error: "Invalid email or password" });
+    res.status(400).json({ error: "Invalid email" });
   }
 };
 
