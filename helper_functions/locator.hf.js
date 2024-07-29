@@ -18,7 +18,7 @@ async function getLocationFromIP() {
   };
 }
 
-async function getNameFromIPLocation(latitude, longitude) {
+async function getNameFromCoords(latitude, longitude) {
   const response = await axios.get(
     `${OPEN_CAGE_API_BASE_URL}/json?q=${latitude}+${longitude}&key=${OPEN_CAGE_API_KEY}`
   );
@@ -41,6 +41,6 @@ async function getLocationFromUserInput(input) {
 
 module.exports = {
   getLocationFromIP,
-  getNameFromIPLocation,
+  getNameFromCoords,
   getLocationFromUserInput,
 };
