@@ -37,7 +37,7 @@ const createComment = async (postId, body) => {
   } catch (error) {
     throw new Error(`Error creating comment: ${error}`);
   }
-}
+};
 
 const editComment = async (commentId, body) => {
   try {
@@ -52,7 +52,7 @@ const editComment = async (commentId, body) => {
   } catch (error) {
     throw new Error(`Error updating comment: ${error}`);
   }
-}
+};
 
 const deleteComment = async (commentId) => {
   try {
@@ -65,7 +65,7 @@ const deleteComment = async (commentId) => {
   } catch (error) {
     throw new Error(`Error deleting comment: ${error}`);
   }
-}
+};
 
 const increaseLikes = async (commentId) => {
   try {
@@ -79,7 +79,7 @@ const increaseLikes = async (commentId) => {
   } catch (error) {
     throw new Error(`Error increasing likes: ${error}`);
   }
-}
+};
 
 const decreaseLikes = async (commentId) => {
   try {
@@ -93,6 +93,13 @@ const decreaseLikes = async (commentId) => {
   } catch (error) {
     throw new Error(`Error decreasing likes: ${error}`);
   }
-}
+};
 
-module.exports = { getAllComments, createComment, editComment, deleteComment, increaseLikes, decreaseLikes};
+module.exports = {
+  getAllComments,
+  createComment,
+  editComment,
+  deleteComment,
+  increaseLikes,
+  decreaseLikes,
+};
