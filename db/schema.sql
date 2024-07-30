@@ -30,11 +30,10 @@ CREATE TABLE posts (
   created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Research multer for file upload (Chatgpt example)
 CREATE TABLE post_media (
   id SERIAL PRIMARY KEY,
   post_id INTEGER REFERENCES posts(id) ON DELETE CASCADE,
-  media BYTEA,
+  media_url TEXT NOT NULL,
   media_type VARCHAR(50), 
   created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
