@@ -35,22 +35,6 @@ comments.post("/", async (req, res) => {
   }
 });
 
-comments.put("/:commentId", async (req, res) => {
-  try {
-    const { commentId } = req.params;
-    const updatedComment = await editComment(
-      commentId,
-      humps.decamelizeKeys(req.body)
-    );
-    res.json(humps.camelizeKeys(updatedComment));
-  } catch (error) {
-    console.log(error);
-    res
-      .status(500)
-      .json({ error: "Error updating comment. Please try again." });
-  }
-});
-
 comments.put("/:commentId/like", async (req, res) => {
   try {
     const { commentId } = req.params;
@@ -74,6 +58,22 @@ comments.put("/:commentId/dislike", async (req, res) => {
     res
       .status(500)
       .json({ error: "Error decreasing likes. Please try again." });
+  }
+});
+
+comments.put("/:commentId", async (req, res) => {
+  try {
+    const { commentId } = req.params;
+    const updatedComment = await editComment(
+      commentId,
+      humps.decamelizeKeys(req.body)
+    );
+    res.json(humps.camelizeKeys(updatedComment));
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ error: "Error updating comment. Please try again." });
   }
 });
 

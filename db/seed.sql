@@ -1,7 +1,7 @@
 \c perfect_walk_db;
 
 INSERT INTO users
-(email, username, password, first_name, middle_name, last_name, birth_Date, location_city, location_state, location_zip, security_question, security_answer) 
+(email, username, password, first_name, middle_name, last_name, birth_date, location_city, location_state, location_zip, security_question, security_answer) 
 VALUES
 ('mquispe@pursuit.org', 'mquispe', 'Pursuit@2024', 'Marco', 'R', 'Quispe', '1996-07-03', 'West Hartford', 'CT', 06110, 'What is your favorite color?', 'Blue');
 

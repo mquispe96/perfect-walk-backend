@@ -32,22 +32,6 @@ subComments.post("/", async (req, res) => {
   }
 });
 
-subComments.put("/:subCommentId", async (req, res) => {
-  try {
-    const { subCommentId } = req.params;
-    const updatedSubComment = await editSubComment(
-      subCommentId,
-      humps.decamelizeKeys(req.body)
-    );
-    res.json(humps.camelizeKeys(updatedSubComment));
-  } catch (error) {
-    console.log(error);
-    res
-      .status(500)
-      .json({ error: "Error updating subcomment. Please try again." });
-  }
-});
-
 subComments.put("/:subCommentId/like", async (req, res) => {
   try {
     const { subCommentId } = req.params;
@@ -74,11 +58,27 @@ subComments.put("/:subCommentId/dislike", async (req, res) => {
   }
 });
 
+subComments.put("/:subCommentId", async (req, res) => {
+  try {
+    const { subCommentId } = req.params;
+    const updatedSubComment = await editSubComment(
+      subCommentId,
+      humps.decamelizeKeys(req.body)
+    );
+    res.json(humps.camelizeKeys(updatedSubComment));
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ error: "Error updating subcomment. Please try again." });
+  }
+});
+
 subComments.delete("/:subCommentId", async (req, res) => {
   try {
     const { subCommentId } = req.params;
-    const deletedSubComment = await deleteSubComment(subCommentId);
-    res.json(humps.camelizeKeys(deletedSubComment));
+    await deleteSubComment(subCommentId);
+    res.json({ message: "Subcomment deleted successfully." });
   } catch (error) {
     console.log(error);
     res
