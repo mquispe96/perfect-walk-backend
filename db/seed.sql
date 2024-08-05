@@ -3,7 +3,7 @@
 INSERT INTO users
 (email, username, password, first_name, middle_name, last_name, birth_date, location_city, location_state, location_zip, security_question, security_answer) 
 VALUES
-('mquispe@pursuit.org', 'mquispe', 'Pursuit@2024', 'Marco', 'R', 'Quispe', '1996-07-03', 'West Hartford', 'CT', 06110, 'What is your favorite color?', 'Blue');
+('mquispe@pursuit.org', 'mquispe', '$2b$10$QSXrgPt9JFYGzll2fOBfN.6szviDAY9FuTmKJ/CoRZ5dYivqAH0QS', 'Marco', 'R', 'Quispe', '1996-07-03', 'West Hartford', 'CT', '06110', 'What is your favorite color?', 'Blue');
 
 INSERT INTO posts
 (user_id, post_text, post_likes, post_location)

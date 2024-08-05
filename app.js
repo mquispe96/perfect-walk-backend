@@ -1,10 +1,11 @@
 const cors = require("cors");
 const express = require("express");
-const upload = require('./db/s3Config.js');
+const {upload} = require('./db/s3Config.js');
 const weatherController = require("./controllers/weather.controller.js");
 const locationsController = require("./controllers/locations.controller.js");
 const userLocationController = require("./controllers/userlocation.controller.js");
 const postsController = require("./controllers/posts.controller.js");
+const usersController = require("./controllers/users.controller.js");
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use('/userlocation', userLocationController);
 app.use('/weather', weatherController);
 app.use('/locations', locationsController);
 app.use('/posts', postsController);
+app.use('/users', usersController);
 
 app.get("/", (req, res) => res.send("Welcome to Perfect Walk App"));
 

@@ -15,7 +15,7 @@ CREATE TABLE users (
   birth_date DATE NOT NULL,
   location_city TEXT,
   location_state TEXT,
-  location_zip INTEGER,
+  location_zip TEXT,
   security_question TEXT NOT NULL,
   security_answer TEXT NOT NULL,
   member_since TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -33,7 +33,9 @@ CREATE TABLE posts (
 CREATE TABLE post_media (
   id SERIAL PRIMARY KEY,
   post_id INTEGER REFERENCES posts(id) ON DELETE CASCADE,
-  media_url TEXT NOT NULL,
+  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+  media_name TEXT NOT NULL,
+  media_url TEXT,
   media_type VARCHAR(50), 
   created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

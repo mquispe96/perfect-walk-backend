@@ -1,5 +1,6 @@
 const db = require("../db/dbConfig.js");
 const bcrypt = require("bcrypt");
+const {deleteFromS3} = require('../helper_functions/posts.hf.js');
 
 const getSecurityQuestion = async (email) => {
   try {
@@ -58,7 +59,7 @@ const userRegistration = async (info) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const hashedAnswer = await bcrypt.hash(security_answer, 10);
     const newUser = await db.one(
-      "INSERT INTO users (email, username, password, first_name, middle_name, last_name, birth_date, location_city, location_state, location_zip, security_question, security_answer) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING id, username, first_name, middle_name, last_name, birth_date, location_city, location_state, location_zip, member_since",
+      "INSERT INTO users (email, username, password, first_name, middle_name, last_name, birth_date, location_city, location_state, location_zip, security_question, security_answer) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *",
       [
         email,
         username,
@@ -83,7 +84,7 @@ const userRegistration = async (info) => {
 const userLogin = async (username, password) => {
   try {
     const user = await db.oneOrNone(
-      "SELECT id, username, first_name, middle_name, last_name, birth_date, location_city, location_state, location_zip, member_since FROM users WHERE username = $1",
+      "SELECT * FROM users WHERE username = $1",
       [username]
     );
     if (!user) {
@@ -129,6 +130,16 @@ const changePassword = async (email, password, newPassword) => {
 
 const deleteAccount = async (id) => {
   try {
+    const media = await db.any(`SELECT * FROM post_media WHERE id = $1`, [
+      id,
+    ]);
+    if (media && media.length > 0) {
+      await Promise.all(
+        media.map(async (med) => {
+          await deleteFromS3(med.media_name);
+        })
+      );
+    }
     const user = await db.one("DELETE FROM users WHERE id = $1 RETURNING id", [
       id,
     ]);

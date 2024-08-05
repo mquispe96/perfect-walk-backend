@@ -22,14 +22,14 @@ users.get("/", async (req, res) =>
   res.status(403).json({ error: "Access denied" })
 );
 
-users.get("/get-security-question/:email", async (req, res) => {
-  const { email } = req.params;
+users.post("/get-security-question", async (req, res) => {
+  const { email } = req.body;
   const question = await getSecurityQuestion(email);
-  if (question) {
-    res.json({ question });
+  if (question.security_question) {
+    res.json(question.security_question);
   } else {
     res.status(404).json({
-      error: "No Security Question found with provided email, try agin",
+      error: "No Security Question found with provided email, try again",
     });
   }
 });
@@ -63,6 +63,9 @@ users.post(
     const formattedData = formatRegistrationData(req.body);
     const newUser = await userRegistration(humps.decamelizeKeys(formattedData));
     if (newUser.id) {
+      delete newUser.password;
+      delete newUser.security_answer;
+      delete newUser.security_question;
       res.json(humps.camelizeKeys(newUser));
     } else {
       res.status(400).json({ error: "Registration failed" });
@@ -74,9 +77,12 @@ users.post("/login", async (req, res) => {
   const { username, password } = req.body;
   const user = await userLogin(username, password);
   if (user.id) {
+    delete user.password;
+    delete user.security_answer;
+    delete user.security_question;
     res.json(humps.camelizeKeys(user));
   } else {
-    res.status(400).json(user.error);
+    res.status(400).json({ error: user.error });
   }
 });
 
@@ -86,7 +92,7 @@ users.put("/change-password", async (req, res) => {
   if (user.id) {
     res.json({ message: "Password changed successfully" });
   } else {
-    res.status(400).json(user.error);
+    res.status(400).json({ error: user.error });
   }
 });
 
@@ -96,6 +102,7 @@ users.delete(
   async (req, res) => {
     const { id } = req.params;
     const user = await deleteAccount(id);
+    console.log(user);
     if (user.id) {
       res.json({ message: "Account deleted successfully" });
     } else {

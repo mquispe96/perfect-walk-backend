@@ -1,22 +1,21 @@
 const express = require("express");
 const humps = require("humps");
-const subComments = express.Router({ mergeParams: true });
+const subcomments = express.Router({ mergeParams: true });
 const {
   getAllSubComments,
   createSubComment,
   editSubComment,
   deleteSubComment,
   increaseLikes,
-  decreaseLikes,
 } = require("../queries/subcomments.queries.js");
 
-subComments.get("/", async (req, res) => {
+subcomments.get("/", async (req, res) => {
   const { commentId } = req.params;
   const allSubComments = await getAllSubComments(commentId);
   res.json(humps.camelizeKeys(allSubComments));
 });
 
-subComments.post("/", async (req, res) => {
+subcomments.post("/", async (req, res) => {
   try {
     const { commentId } = req.params;
     const newSubComment = await createSubComment(
@@ -32,7 +31,7 @@ subComments.post("/", async (req, res) => {
   }
 });
 
-subComments.put("/:subCommentId/like", async (req, res) => {
+subcomments.put("/:subCommentId/like", async (req, res) => {
   try {
     const { subCommentId } = req.params;
     const updatedSubComment = await increaseLikes(subCommentId);
@@ -45,20 +44,7 @@ subComments.put("/:subCommentId/like", async (req, res) => {
   }
 });
 
-subComments.put("/:subCommentId/dislike", async (req, res) => {
-  try {
-    const { subCommentId } = req.params;
-    const updatedSubComment = await decreaseLikes(subCommentId);
-    res.json(humps.camelizeKeys(updatedSubComment));
-  } catch (error) {
-    console.log(error);
-    res
-      .status(500)
-      .json({ error: "Error decreasing likes. Please try again." });
-  }
-});
-
-subComments.put("/:subCommentId", async (req, res) => {
+subcomments.put("/:subCommentId", async (req, res) => {
   try {
     const { subCommentId } = req.params;
     const updatedSubComment = await editSubComment(
@@ -74,7 +60,7 @@ subComments.put("/:subCommentId", async (req, res) => {
   }
 });
 
-subComments.delete("/:subCommentId", async (req, res) => {
+subcomments.delete("/:subCommentId", async (req, res) => {
   try {
     const { subCommentId } = req.params;
     await deleteSubComment(subCommentId);
@@ -87,4 +73,4 @@ subComments.delete("/:subCommentId", async (req, res) => {
   }
 });
 
-module.exports = subComments;
+module.exports = subcomments;

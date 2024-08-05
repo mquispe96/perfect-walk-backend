@@ -8,7 +8,7 @@ const getAllComments = async (postId) => {
       FROM comments 
       LEFT JOIN users ON comments.user_id = users.id 
       WHERE comments.post_id = $1 
-      ORDER BY comments.id DESC`,
+      ORDER BY comments.id ASC`,
       [postId]
     );
     return comments;
@@ -48,7 +48,15 @@ const editComment = async (commentId, body) => {
       WHERE id = $2 RETURNING *`,
       [comment_text, commentId]
     );
-    return comment;
+    const updatedComment = await db.one(
+      `SELECT comments.*, 
+      (users.first_name || ' ' || COALESCE(users.middle_name || ' ', '') || users.last_name) AS commented_by 
+      FROM comments 
+      LEFT JOIN users ON comments.user_id = users.id 
+      WHERE comments.id = $1`,
+      [commentId]
+    );
+    return updatedComment;
   } catch (error) {
     throw new Error(`Error updating comment: ${error}`);
   }
@@ -71,27 +79,21 @@ const increaseLikes = async (commentId) => {
   try {
     const comment = await db.one(
       `UPDATE comments 
-      SET likes = likes + 1 
+      SET comment_likes = comment_likes + 1 
       WHERE id = $1 RETURNING *`,
       [commentId]
     );
-    return comment;
+    const updatedComment = await db.one(
+      `SELECT comments.*, 
+      (users.first_name || ' ' || COALESCE(users.middle_name || ' ', '') || users.last_name) AS commented_by 
+      FROM comments 
+      LEFT JOIN users ON comments.user_id = users.id 
+      WHERE comments.id = $1`,
+      [commentId]
+    );
+    return updatedComment;
   } catch (error) {
     throw new Error(`Error increasing likes: ${error}`);
-  }
-};
-
-const decreaseLikes = async (commentId) => {
-  try {
-    const comment = await db.one(
-      `UPDATE comments 
-      SET likes = likes - 1 
-      WHERE id = $1 RETURNING *`,
-      [commentId]
-    );
-    return comment;
-  } catch (error) {
-    throw new Error(`Error decreasing likes: ${error}`);
   }
 };
 
@@ -101,5 +103,4 @@ module.exports = {
   editComment,
   deleteComment,
   increaseLikes,
-  decreaseLikes,
 };

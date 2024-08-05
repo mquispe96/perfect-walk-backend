@@ -8,7 +8,6 @@ const {
   editComment,
   deleteComment,
   increaseLikes,
-  decreaseLikes,
 } = require("../queries/comments.queries.js");
 
 comments.use("/:commentId/subcomments", subCommentsController);
@@ -45,19 +44,6 @@ comments.put("/:commentId/like", async (req, res) => {
     res
       .status(500)
       .json({ error: "Error increasing likes. Please try again." });
-  }
-});
-
-comments.put("/:commentId/dislike", async (req, res) => {
-  try {
-    const { commentId } = req.params;
-    const updatedComment = await decreaseLikes(commentId);
-    res.json(humps.camelizeKeys(updatedComment));
-  } catch (error) {
-    console.log(error);
-    res
-      .status(500)
-      .json({ error: "Error decreasing likes. Please try again." });
   }
 });
 

@@ -8,7 +8,7 @@ const getAllSubComments = async (commentId) => {
       FROM sub_comments 
       LEFT JOIN users ON sub_comments.user_id = users.id 
       WHERE sub_comments.comment_id = $1 
-      ORDER BY sub_comments.id DESC`,
+      ORDER BY sub_comments.id ASC`,
       [commentId]
     );
     return subComments;
@@ -48,7 +48,15 @@ const editSubComment = async (subCommentId, body) => {
       WHERE id = $2 RETURNING *`,
       [sub_comment_text, subCommentId]
     );
-    return subComment;
+    const updatedSubComment = await db.one(
+      `SELECT sub_comments.*, 
+      (users.first_name || ' ' || COALESCE(users.middle_name || ' ', '') || users.last_name) AS commented_by 
+      FROM sub_comments 
+      LEFT JOIN users ON sub_comments.user_id = users.id 
+      WHERE sub_comments.id = $1`,
+      [subCommentId]
+    );
+    return updatedSubComment;
   } catch (error) {
     throw new Error(`Error updating subcomment: ${error}`);
   }
@@ -71,27 +79,21 @@ const increaseLikes = async (subCommentId) => {
   try {
     const subComment = await db.one(
       `UPDATE sub_comments 
-      SET likes = likes + 1 
+      SET sub_comment_likes = sub_comment_likes + 1 
       WHERE id = $1 RETURNING *`,
       [subCommentId]
     );
-    return subComment;
+    const updatedSubComment = await db.one(
+      `SELECT sub_comments.*, 
+      (users.first_name || ' ' || COALESCE(users.middle_name || ' ', '') || users.last_name) AS commented_by 
+      FROM sub_comments 
+      LEFT JOIN users ON sub_comments.user_id = users.id 
+      WHERE sub_comments.id = $1`,
+      [subCommentId]
+    );
+    return updatedSubComment;
   } catch (error) {
     throw new Error(`Error increasing likes: ${error}`);
-  }
-};
-
-const decreaseLikes = async (subCommentId) => {
-  try {
-    const subComment = await db.one(
-      `UPDATE sub_comments 
-      SET likes = likes - 1 
-      WHERE id = $1 RETURNING *`,
-      [subCommentId]
-    );
-    return subComment;
-  } catch (error) {
-    throw new Error(`Error decreasing likes: ${error}`);
   }
 };
 
@@ -101,5 +103,4 @@ module.exports = {
   editSubComment,
   deleteSubComment,
   increaseLikes,
-  decreaseLikes,
 };

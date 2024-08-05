@@ -9,7 +9,6 @@ const {
   editPost,
   deletePost,
   increaseLikes,
-  decreaseLikes,
 } = require("../queries/posts.queries.js");
 
 posts.use("/:postId/comments", commentsController);
@@ -35,7 +34,7 @@ posts.post("/", async (req, res) => {
   }
 });
 
-posts.put('/:postID/like', async (req, res) => {
+posts.put('/:postId/like', async (req, res) => {
   try {
     const { postId } = req.params;
     const updatedPost = await increaseLikes(postId);
@@ -46,18 +45,7 @@ posts.put('/:postID/like', async (req, res) => {
   }
 });
 
-posts.put('/:postID/dislike', async (req, res) => {
-  try {
-    const { postId } = req.params;
-    const updatedPost = await decreaseLikes(postId);
-    res.json(humps.camelizeKeys(updatedPost));
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Error decreasing likes. Please try again." });
-  }
-});
-
-posts.put('/:postID', async (req, res) => {
+posts.put('/:postId', async (req, res) => {
   try {
     const { postId } = req.params;
     const updatedPost = await editPost(postId, humps.decamelizeKeys(req.body), req.files);
@@ -68,7 +56,7 @@ posts.put('/:postID', async (req, res) => {
   }
 });
 
-posts.delete('/:postID', async (req, res) => {
+posts.delete('/:postId', async (req, res) => {
   try {
     const { postId } = req.params;
     await deletePost(postId);

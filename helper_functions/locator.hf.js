@@ -10,11 +10,11 @@ async function getLocationFromIP() {
     `${IPSTACK_API_BASE_URL}/check?access_key=${IPSTACK_API_KEY}`
   );
   const { latitude, longitude } = response.data;
-  const { stateCode } = await getNameFromIPLocation(latitude, longitude);
+  const place = await getNameFromCoords(latitude, longitude);
   return {
     latitude,
     longitude,
-    stateCode,
+    place,
   };
 }
 

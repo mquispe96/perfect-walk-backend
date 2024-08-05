@@ -1,6 +1,5 @@
 const {S3Client} = require('@aws-sdk/client-s3');
 const multer = require('multer');
-const multerS3 = require('multer-s3');
 require('dotenv').config();
 
 const s3 = new S3Client({
@@ -11,18 +10,8 @@ const s3 = new S3Client({
   },
 });
 
-const storage = multerS3({
-  s3: s3,
-  bucket: process.env.AWS_BUCKET_NAME,
-  acl: 'public-read',
-  metadata: (req, file, cb) => {
-    cb(null, { fieldName: file.fieldname });
-  },
-  key: (req, file, cb) => {
-    cb(null, Date.now().toString() + '-' + file.originalname);
-  },
-});
+const storage = multer.memoryStorage();
 
 const upload = multer({ storage: storage });
 
-module.exports = upload;
+module.exports = { upload, s3 };
