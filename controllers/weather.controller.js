@@ -12,9 +12,9 @@ const WEATHER_API_KEY = process.env.OPEN_WEATHER_MAP_API_KEY;
 
 weather.get("/byInput", async (req, res) => {
   const { input } = req.query;
-  const { lat, long, place } = await getLocationFromUserInput(input);
+  const { latitude, longitude, place } = await getLocationFromUserInput(input);
   const response = await axios.get(
-    `${WEATHER_BASE_URL}/onecall?lat=${lat}&lon=${long}&units=imperial&appid=${WEATHER_API_KEY}`
+    `${WEATHER_BASE_URL}/onecall?lat=${latitude}&lon=${longitude}&units=imperial&appid=${WEATHER_API_KEY}`
   );
   const formattedData = formatAllWeatherData(response.data);
   res.json({ ...formattedData, place });
