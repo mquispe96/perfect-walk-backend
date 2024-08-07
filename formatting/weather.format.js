@@ -19,10 +19,10 @@ const formatAllWeatherData = data => {
     rain: data.current.rain ? `${data.current.rain['1h']} mm/h` : '0 mm/h',
     snow: data.current.snow ? `${data.current.snow['1h']} mm/h` : '0 mm/h',
   };
-  const minutely = data.minutely.map(entry => ({
+  const minutely = data.minutely?.map(entry => ({
     dateTime: moment.unix(entry.dt).format('hh:mm A'),
     precipitation: `${entry.precipitation} mm/h`,
-  }));
+  })) ?? [];
   const hourly = data.hourly.map(entry => ({
     dateTime: moment.unix(entry.dt).format('hh:mm A'),
     temperature: `${entry.temp} °F`,

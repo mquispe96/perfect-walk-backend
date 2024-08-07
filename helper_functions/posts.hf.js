@@ -10,10 +10,11 @@ const { s3 } = require("../db/s3Config.js");
 require("dotenv").config();
 
 const randomImgName = (bytes = 32) => crypto.randomBytes(bytes).toString("hex");
+
 const modifyBuffer = async (buffer) =>
   await sharp(buffer)
     .rotate()
-    .resize({ width: 250, fit: "contain" })
+    .resize({ width: 300, height: 300, fit: sharp.fit.inside, withoutEnlargement: true })
     .toBuffer();
 
 const getSignedUrlFromS3 = async (mediaName) => {

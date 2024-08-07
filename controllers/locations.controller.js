@@ -22,7 +22,7 @@ locations.get('/byParkCode', async (req, res) => {
   if (location.data.total === '0') {
     res.status(404).send({error: 'No location found'});
   } else {
-    res.json(location.data.data);
+    res.json(location.data.data[0]);
   }
 });
 
