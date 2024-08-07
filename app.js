@@ -9,7 +9,10 @@ const usersController = require("./controllers/users.controller.js");
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: ['https://perfect-walk.netlify.app'],
+  methods: "GET,POST,PUT,DELETE"
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(upload.array("media", 5));
